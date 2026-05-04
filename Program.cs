@@ -1,61 +1,74 @@
 using System;
 using SA.BLL;
-using SA.DAL;
 using SA.Models;
 
 namespace SA
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
+            var service = new DeviceService();
 
-            // Налаштування Dependency Injection "вручну"
-            IDeviceRepository repository = new DeviceRepository();
-            DeviceService deviceService = new DeviceService(repository);
+            // 1. Ініціалізація
+            var laptop = new Laptop("Робочий Ноутбук", new Processor("Intel Core i5"), new Memory("DDR4", 16));
+            var phone = new Smartphone("Особистий Смартфон", new Processor("Snapdragon 8"), new Memory("LPDDR5", 8), new TouchScreen(6.1));
+            var tablet = new Tablet("Домашній Планшет", new Processor("Apple A15"), new Memory("LPDDR5", 6), new TouchScreen(10.5));
 
-            // 1. Створення даних
-            Processor p1 = new Processor("Intel Core i5");
-            Memory m1 = new Memory("DDR4", 16);
-            Laptop laptop = new Laptop("Робочий Ноутбук", p1, m1);
+            Console.WriteLine("--- СИМУЛЯЦІЯ РОБОТИ ПРИСТРОЇВ (Варіант 5) ---\n");
 
-            Processor p2 = new Processor("Apple A15");
-            Memory m2 = new Memory("LPDDR5", 6);
-            TouchScreen screen = new TouchScreen(6.1);
-            Smartphone smartphone = new Smartphone("Особистий Смартфон", p2, m2, screen);
+            Console.WriteLine("1. РЕЄСТРАЦІЯ ПРИСТРОЇВ");
+            Console.WriteLine($"[ДІЯ] Користувач купує: {laptop.Name} (Laptop, {laptop.Cpu.Model}, {laptop.Ram.CapacityGB}GB)");
+            Console.WriteLine($"[ДІЯ] Користувач купує: {phone.Name} (Smartphone, {phone.Cpu.Model}, {phone.Ram.CapacityGB}GB, Екран: {phone.Screen.DiagonalSize}\")");
+            Console.WriteLine($"[ДІЯ] Користувач купує: {tablet.Name} (Tablet, {tablet.Cpu.Model}, {tablet.Ram.CapacityGB}GB, Екран: {tablet.Screen.DiagonalSize}\")");
 
-            // 2. Реєстрація через бізнес-шар
-            deviceService.RegisterNewDevice(laptop);
-            deviceService.RegisterNewDevice(smartphone);
+            Console.WriteLine("\n2. ПЕРЕВІРКА ЖИВЛЕННЯ (БЕЗ ЕЛЕКТРОЕНЕРГІЇ)");
+            Console.WriteLine("[СТАТУС] Світло вимкнули. Пристрої переходять на акумулятори.");
+            Console.WriteLine($" - {laptop.Name} працює від акумулятора (Залишок: {laptop.BatteryCapacityCurrent} мВтг).");
+            Console.WriteLine($" - {phone.Name} працює від акумулятора (Залишок: {phone.BatteryCapacityCurrent} мАг).");
 
-            Console.WriteLine("--- СИМУЛЯЦІЯ: ІДЕАЛЬНИЙ СВІТ (3-Layer Architecture) ---\n");
+            Console.WriteLine("\n3. СПРОБА ЗАПУСТИТИ ГРУ БЕЗ ПЗ");
+            PrintAction(laptop.Name, service.TryExecuteAction(laptop, "запустити гру", true));
 
-            // 3. Виконання дій та відображення
-            foreach (var device in deviceService.GetAllDevices())
-            {
-                Console.WriteLine($"[ПРИСТРІЙ]: {device.Name} ({device.GetType().Name})");
-                Console.WriteLine($"Початковий стан: {device.CurrentActivity}");
-                
-                // Викликаємо логіку через сервіс (BLL)
-                deviceService.MakeDeviceWork(device.Id);
-                Console.WriteLine($"Зміна стану 1: {device.CurrentActivity}");
+            Console.WriteLine("\n4. ВСТАНОВЛЕННЯ ПЗ ТА ПІДКЛЮЧЕННЯ ДО МЕРЕЖІ");
+            laptop.HasSoftware = true;
+            laptop.HasNetwork = true;
+            Console.WriteLine($"[ДІЯ] На {laptop.Name} встановлено ігрове ПЗ.");
+            Console.WriteLine($"[ДІЯ] {laptop.Name} підключено до Wi-Fi.");
 
-                if (device is Smartphone)
-                {
-                    deviceService.MakeDeviceWatchVideo(device.Id);
-                    Console.WriteLine($"Зміна стану 2: {device.CurrentActivity}");
-                }
-                else
-                {
-                    deviceService.MakeDevicePlay(device.Id);
-                    Console.WriteLine($"Зміна стану 2: {device.CurrentActivity}");
-                }
+            Console.WriteLine("\n5. ЗАПУСК ГРИ ТА ВИТРАТА ЗАРЯДУ");
+            PrintAction(laptop.Name, service.TryExecuteAction(laptop, "Запущено комп'ютерну гру", true));
+            service.DrainBattery(laptop, 3, true); // Грали 3 години
+            Console.WriteLine("[СТАТУС] Після 3 годин гри...");
+            Console.WriteLine($" - Залишок заряду {laptop.Name}: {laptop.BatteryCapacityCurrent} мВтг (Вистачить ще на {service.CalculateRemainingHours(laptop, true)} год інтенсивного використання).");
 
-                Console.WriteLine(new string('-', 30));
-            }
+            Console.WriteLine("\n6. РОБОТА СМАРТФОНА");
+            phone.HasSoftware = true;
+            PrintAction(phone.Name, service.TryExecuteAction(phone, "Відкрито месенджер для чату", false));
+            service.DrainBattery(phone, 10, false); // Чатились 10 годин
+            Console.WriteLine("[СТАТУС] Після 10 годин чату...");
+            Console.WriteLine($" - Залишок заряду {phone.Name}: {phone.BatteryCapacityCurrent} мАг (Вистачить ще на {service.CalculateRemainingHours(phone, false)} год).");
+
+            Console.WriteLine("\n7. РОЗРЯДКА ПРИСТРОЮ");
+            Console.WriteLine($"[ДІЯ] Користувач грає на планшеті 5 годин підряд...");
+            tablet.HasSoftware = true;
+            service.DrainBattery(tablet, 5, true); // Планшет витримує 4 години важкої гри, тому через 5 годин він сяде
+            PrintAction(tablet.Name, service.TryExecuteAction(tablet, "грати", true));
+
+            Console.WriteLine("\n8. ПІДКЛЮЧЕННЯ ЗОВНІШНІХ ПРИСТРОЇВ (ПРИНТЕР)");
+            PrintAction(laptop.Name, service.TryExecuteAction(laptop, "друк документа", false));
+            laptop.HasPeripherals = true;
+            Console.WriteLine($"[ДІЯ] Підключено принтер до {laptop.Name}.");
+            PrintAction(laptop.Name, service.TryExecuteAction(laptop, "Відправляє документ на принтер", false));
 
             Console.ReadLine();
+        }
+
+        static void PrintAction(string name, ActionResponse response)
+        {
+            string prefix = response.IsSuccess ? "[УСПІХ]" : "[ВІДМОВА]";
+            Console.WriteLine($"{prefix} {name} {(response.IsSuccess ? ":" : "")} {response.Message}");
         }
     }
 }

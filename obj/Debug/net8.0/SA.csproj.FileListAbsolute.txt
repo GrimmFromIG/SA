@@ -12,3 +12,4 @@ C:\VScode\SA\obj\Debug\net8.0\refint\SA.dll
 C:\VScode\SA\obj\Debug\net8.0\SA.pdb
 C:\VScode\SA\obj\Debug\net8.0\SA.genruntimeconfig.cache
 C:\VScode\SA\obj\Debug\net8.0\ref\SA.dll
+C:\VScode\SA\obj\Debug\net8.0\SA.sourcelink.json
