@@ -1,0 +1,14 @@
+C:\VScode\SA\bin\Debug\net8.0\SA.exe
+C:\VScode\SA\bin\Debug\net8.0\SA.deps.json
+C:\VScode\SA\bin\Debug\net8.0\SA.runtimeconfig.json
+C:\VScode\SA\bin\Debug\net8.0\SA.dll
+C:\VScode\SA\bin\Debug\net8.0\SA.pdb
+C:\VScode\SA\obj\Debug\net8.0\SA.GeneratedMSBuildEditorConfig.editorconfig
+C:\VScode\SA\obj\Debug\net8.0\SA.AssemblyInfoInputs.cache
+C:\VScode\SA\obj\Debug\net8.0\SA.AssemblyInfo.cs
+C:\VScode\SA\obj\Debug\net8.0\SA.csproj.CoreCompileInputs.cache
+C:\VScode\SA\obj\Debug\net8.0\SA.dll
+C:\VScode\SA\obj\Debug\net8.0\refint\SA.dll
+C:\VScode\SA\obj\Debug\net8.0\SA.pdb
+C:\VScode\SA\obj\Debug\net8.0\SA.genruntimeconfig.cache
+C:\VScode\SA\obj\Debug\net8.0\ref\SA.dll
