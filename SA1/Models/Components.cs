@@ -1,4 +1,4 @@
-namespace SA.Models
+namespace SA1.Models
 {
     public class Processor
     {

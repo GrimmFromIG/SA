@@ -1,6 +1,6 @@
 using System;
 
-namespace SA.Models
+namespace SA1.Models
 {
     public abstract class Device
     {

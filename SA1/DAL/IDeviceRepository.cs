@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using SA.Models;
+using SA1.Models;
 
-namespace SA.DAL
+namespace SA1.DAL
 {
     public interface IDeviceRepository
     {

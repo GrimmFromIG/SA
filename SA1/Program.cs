@@ -1,8 +1,8 @@
 using System;
-using SA.BLL;
-using SA.Models;
+using SA1.BLL;
+using SA1.Models;
 
-namespace SA
+namespace SA1
 {
     class Program
     {

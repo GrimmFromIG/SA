@@ -1,7 +1,7 @@
 using System;
-using SA.Models;
+using SA1.Models;
 
-namespace SA.BLL
+namespace SA1.BLL
 {
     public class ActionResponse
     {
