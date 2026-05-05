@@ -9,19 +9,10 @@ namespace SA1.DAL
     {
         private readonly List<Device> _devices = new List<Device>();
 
-        public void AddDevice(Device device)
-        {
-            _devices.Add(device);
-        }
-
-        public Device GetDeviceById(Guid id)
-        {
-            return _devices.FirstOrDefault(d => d.Id == id);
-        }
-
-        public IEnumerable<Device> GetAllDevices()
-        {
-            return _devices;
-        }
+        public void AddDevice(Device device) => _devices.Add(device);
+        
+        public Device GetDeviceById(Guid id) => _devices.FirstOrDefault(d => d.Id == id);
+        
+        public IEnumerable<Device> GetAllDevices() => _devices;
     }
 }
