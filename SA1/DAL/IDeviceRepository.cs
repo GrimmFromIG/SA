@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using SA1.Models; // Або APPZ_Lab1.Models
+using SA1.Models; 
 
 namespace SA1.DAL
 {
