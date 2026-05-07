@@ -1,56 +1,65 @@
 using System;
+using System.Collections.Generic; // Важливо для List<>
+using System.Text.Json.Serialization;
 
 namespace SA1.Models
 {
+    [JsonDerivedType(typeof(Laptop), typeDiscriminator: "Laptop")]
+    [JsonDerivedType(typeof(Smartphone), typeDiscriminator: "Smartphone")]
+    [JsonDerivedType(typeof(Tablet), typeDiscriminator: "Tablet")]
     public abstract class Device
     {
-        public Guid Id { get; private set; } = Guid.NewGuid();
-        public string Name { get; protected set; }
-        public Processor Cpu { get; protected set; }
-        public Memory Ram { get; protected set; }
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        
+        public Processor Cpu { get; set; }
+        public Memory Ram { get; set; }
+        public Screen DeviceScreen { get; set; }
+        public Speaker InternalSpeaker { get; set; }
+        public DeviceSettings Settings { get; set; } = new DeviceSettings();
+
+        public double BatteryCapacityMax { get; set; }
         public double BatteryCapacityCurrent { get; set; }
-        public double BatteryCapacityMax { get; protected set; }
-        public bool HasSoftware { get; set; } = false;
-        public bool HasNetwork { get; set; } = false;
-        public bool HasPeripherals { get; set; } = false;
+        public string CurrentActivity { get; set; } = "Очікування";
 
-        public string CurrentActivity { get; private set; } = "Очікування";
-
-        protected Device(string name, Processor cpu, Memory ram, double batteryCapacity)
-        {
-            Name = name;
-            Cpu = cpu;
-            Ram = ram;
-            BatteryCapacityMax = batteryCapacity;
-            BatteryCapacityCurrent = batteryCapacity;
-        }
+        public List<string> ActionHistory { get; set; } = new List<string>();
 
         public void SetActivity(string activity) => CurrentActivity = activity;
-    }
 
-    public class Laptop : Device
-    {
-        public Laptop(string name, Processor cpu, Memory ram) 
-            : base(name, cpu, ram, 35000) { } // 35000 мВтг
-    }
-
-    public class Smartphone : Device
-    {
-        public TouchScreen Screen { get; private set; }
-        public Smartphone(string name, Processor cpu, Memory ram, TouchScreen screen) 
-            : base(name, cpu, ram, 3000) // 3000 мАг
+        public void LogAction(string message)
         {
-            Screen = screen;
+            ActionHistory.Add($"[{DateTime.Now:HH:mm:ss}] {message}");
+            if (ActionHistory.Count > 10)
+            {
+                ActionHistory.RemoveAt(0); 
+            }
+        }
+
+        public Device() { }
+
+        protected Device(string name, Processor cpu, Memory ram, Screen screen, Speaker speaker, double battery)
+        {
+            Id = Guid.NewGuid();
+            Name = name; Cpu = cpu; Ram = ram; DeviceScreen = screen; InternalSpeaker = speaker;
+            BatteryCapacityMax = battery; BatteryCapacityCurrent = battery;
         }
     }
 
-    public class Tablet : Device
-    {
-        public TouchScreen Screen { get; private set; }
-        public Tablet(string name, Processor cpu, Memory ram, TouchScreen screen) 
-            : base(name, cpu, ram, 5000) // 5000 мАг
-        {
-            Screen = screen;
-        }
+    public class Laptop : Device 
+    { 
+        public Laptop() { } 
+        public Laptop(string n, Processor c, Memory r, Screen s, Speaker sp) : base(n, c, r, s, sp, 6000) { } 
+    }
+
+    public class Smartphone : Device 
+    { 
+        public Smartphone() { } 
+        public Smartphone(string n, Processor c, Memory r, Screen s, Speaker sp) : base(n, c, r, s, sp, 3000) { } 
+    }
+
+    public class Tablet : Device 
+    { 
+        public Tablet() { } 
+        public Tablet(string n, Processor c, Memory r, Screen s, Speaker sp) : base(n, c, r, s, sp, 5000) { } 
     }
 }
