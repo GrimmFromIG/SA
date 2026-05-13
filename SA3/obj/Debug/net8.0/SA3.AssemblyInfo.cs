@@ -10,12 +10,12 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("SA1")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("SA3")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c050bb22d1b1a2efb8170f7ccf60e476778e88b9")]
-[assembly: System.Reflection.AssemblyProductAttribute("SA1")]
-[assembly: System.Reflection.AssemblyTitleAttribute("SA1")]
+[assembly: System.Reflection.AssemblyProductAttribute("SA3")]
+[assembly: System.Reflection.AssemblyTitleAttribute("SA3")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
 // Создано классом WriteCodeFragment MSBuild.
