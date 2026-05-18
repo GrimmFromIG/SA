@@ -6,8 +6,8 @@ namespace SA3.Core.DTOs
         public string Title { get; set; }
         public string Content { get; set; }
         public int AuthorId { get; set; }
-        public string AuthorName { get; set; }   // <--- Додано
+        public string AuthorName { get; set; }  
         public int CategoryId { get; set; }
-        public string CategoryName { get; set; } // <--- Додано
+        public string CategoryName { get; set; } 
     }
 }

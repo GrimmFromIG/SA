@@ -65,7 +65,14 @@ namespace SA3.BLL.Services
             _uow.Save();
         }
 
-        // --- ТІ САМІ НОВІ МЕТОДИ ДЛЯ МЕНЮ ---
+        public UserDto RegisterUser(string username)
+        {
+            var newUser = new User { Username = username, IsRegistered = true };
+            _uow.GetRepository<User>().Add(newUser);
+            _uow.Save();
+            
+            return _mapper.Map<UserDto>(newUser);
+        }
         
         public IEnumerable<CategoryDto> GetAllCategories()
         {
