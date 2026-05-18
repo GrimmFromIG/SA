@@ -19,6 +19,11 @@
       "Id": 4,
       "Username": "\u0414\u043C\u0438\u0442\u0440\u043E",
       "IsRegistered": true
+    },
+    {
+      "Id": 5,
+      "Username": "\u0427\u0443\u0440\u043A\u0430",
+      "IsRegistered": true
     }
   ],
   "Categories": [
@@ -77,6 +82,13 @@
       "Content": "1231231231",
       "CategoryId": 3,
       "AuthorId": 1
+    },
+    {
+      "Id": 7,
+      "Title": "Fortnite is dying",
+      "Content": "12312312",
+      "CategoryId": 3,
+      "AuthorId": 1
     }
   ],
   "Comments": [
@@ -100,6 +112,20 @@
       "AuthorId": 1,
       "ArticleId": 4,
       "ParentCommentId": null
+    },
+    {
+      "Id": 4,
+      "Text": "ADsada",
+      "AuthorId": 1,
+      "ArticleId": 7,
+      "ParentCommentId": null
+    },
+    {
+      "Id": 5,
+      "Text": "asdads",
+      "AuthorId": 1,
+      "ArticleId": 7,
+      "ParentCommentId": 4
     }
   ]
 }

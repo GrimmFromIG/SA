@@ -10,7 +10,6 @@ namespace SA3.UI
         private readonly BlogService _blogService;
         private UserDto _currentUser;
 
-        // Конструктор: DI-контейнер сам передасть сюди BlogService
         public BlogConsoleUI(BlogService blogService)
         {
             _blogService = blogService;
@@ -22,7 +21,6 @@ namespace SA3.UI
             MainMenu();
         }
 
-        // ================= АВТОРИЗАЦІЯ =================
         private void AuthScreen()
         {
             while (true)
@@ -86,7 +84,6 @@ namespace SA3.UI
             return false;
         }
 
-        // ================= ГОЛОВНЕ МЕНЮ ТА СТАТТІ =================
         private void MainMenu()
         {
             while (true)

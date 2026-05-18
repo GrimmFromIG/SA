@@ -22,3 +22,8 @@ C:\VScode\SA\SA3\obj\Debug\net8.0\SA3.csproj.Up2Date
 C:\VScode\SA\SA3\obj\Debug\net8.0\SA3.dll
 C:\VScode\SA\SA3\obj\Debug\net8.0\refint\SA3.dll
 C:\VScode\SA\SA3\obj\Debug\net8.0\SA3.pdb
+C:\VScode\SA\SA3\bin\Debug\net8.0\SA3.deps.json
+C:\VScode\SA\SA3\bin\Debug\net8.0\SA3.runtimeconfig.json
+C:\VScode\SA\SA3\bin\Debug\net8.0\SA3.pdb
+C:\VScode\SA\SA3\obj\Debug\net8.0\SA3.genruntimeconfig.cache
+C:\VScode\SA\SA3\obj\Debug\net8.0\ref\SA3.dll
