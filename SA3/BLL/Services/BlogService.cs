@@ -91,5 +91,38 @@ namespace SA3.BLL.Services
             var comments = _uow.GetRepository<Comment>().GetAll();
             return _mapper.Map<IEnumerable<CommentDto>>(comments);
         }
+
+        public void DeleteArticle(int articleId, int currentUserId)
+        {
+            var repo = _uow.GetRepository<Article>();
+            var article = repo.GetById(articleId);
+
+            if (article == null)
+                throw new Exception("Статтю не знайдено.");
+            
+            if (article.AuthorId != currentUserId)
+                throw new UnauthorizedAccessException("Ви можете видаляти лише свої статті.");
+
+            repo.Delete(article); 
+            _uow.Save();
+        }
+
+        public void DeleteComment(int commentId, int currentUserId)
+        {
+            var repo = _uow.GetRepository<Comment>();
+            var comment = repo.GetById(commentId);
+
+            if (comment == null)
+                throw new Exception("Коментар не знайдено.");
+            
+            if (comment.AuthorId != currentUserId)
+                throw new UnauthorizedAccessException("Ви можете видаляти лише свої коментарі.");
+
+            repo.Delete(comment);
+            _uow.Save();
+        }
+        
     }
+
+    
 }

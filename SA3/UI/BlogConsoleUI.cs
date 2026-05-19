@@ -140,62 +140,107 @@ namespace SA3.UI
 
         private void InteractiveArticleViewer(int? categoryId)
         {
-            var articles = _blogService.GetAllArticles();
-            if (categoryId.HasValue)
-            {
-                articles = articles.Where(a => a.CategoryId == categoryId.Value);
-            }
-
-            var filteredArticles = articles.ToList();
-
-            if (!filteredArticles.Any())
-            {
-                Console.WriteLine("\n[-] У цій рубриці ще немає статей. Натисніть будь-яку клавішу...");
-                Console.ReadKey(true);
-                return;
-            }
-
-            int currentIndex = 0;
-
             while (true)
             {
-                Console.Clear();
-                var article = filteredArticles[currentIndex];
-
-                Console.WriteLine($"=== СТАТТЯ {currentIndex + 1} з {filteredArticles.Count} ===");
-                Console.WriteLine($"Рубрика: [{article.CategoryName}]");
-                Console.WriteLine($"Автор: {article.AuthorName}");
-                Console.WriteLine("\n" + article.Title.ToUpper());
-                Console.WriteLine("--------------------------------------------------");
-                Console.WriteLine(article.Content);
-                Console.WriteLine("--------------------------------------------------");
-
-                PrintComments(article.Id);
-
-                Console.WriteLine("\n================ ПАНЕЛЬ УПРАВЛІННЯ ================");
-                Console.WriteLine("[ Стрілка ВЛІВО ] - Попередня стаття");
-                Console.WriteLine("[ Стрілка ВПРАВО] - Наступна стаття");
-                Console.WriteLine("[ K ] - Написати коментар");
-                Console.WriteLine("[ V ] - Відповісти на коментар");
-                Console.WriteLine("[ ESC ] - Повернутися в головне меню");
-                Console.WriteLine("===================================================");
-
-                var keyInfo = Console.ReadKey(true);
-
-                if (keyInfo.Key == ConsoleKey.LeftArrow)
-                    currentIndex = (currentIndex > 0) ? currentIndex - 1 : filteredArticles.Count - 1;
-                else if (keyInfo.Key == ConsoleKey.RightArrow)
-                    currentIndex = (currentIndex < filteredArticles.Count - 1) ? currentIndex + 1 : 0;
-                else if (keyInfo.Key == ConsoleKey.K)
-                    AddCommentInteractive(article.Id, null);
-                else if (keyInfo.Key == ConsoleKey.V)
+                var articles = _blogService.GetAllArticles();
+                if (categoryId.HasValue)
                 {
-                    Console.Write("\nВведіть ID коментаря, на який відповідаєте: ");
-                    if (int.TryParse(Console.ReadLine(), out int parentId))
-                        AddCommentInteractive(article.Id, parentId);
+                    articles = articles.Where(a => a.CategoryId == categoryId.Value);
                 }
-                else if (keyInfo.Key == ConsoleKey.Escape)
-                    break;
+
+                var filteredArticles = articles.OrderByDescending(a => a.Id).ToList();
+
+                if (!filteredArticles.Any())
+                {
+                    Console.WriteLine("\n[-] У цій рубриці немає статей (або вони були видалені). Натисніть клавішу...");
+                    Console.ReadKey(true);
+                    return;
+                }
+
+                int currentIndex = 0;
+
+                while (true)
+                {
+                    Console.Clear();
+                    
+                    if (currentIndex >= filteredArticles.Count) currentIndex = 0; 
+                    
+                    var article = filteredArticles[currentIndex];
+
+                    Console.WriteLine($"=== СТАТТЯ {currentIndex + 1} з {filteredArticles.Count} ===");
+                    Console.WriteLine($"Рубрика: [{article.CategoryName}]");
+                    Console.WriteLine($"Автор: {article.AuthorName}");
+                    Console.WriteLine("\n" + article.Title.ToUpper());
+                    Console.WriteLine("--------------------------------------------------");
+                    Console.WriteLine(article.Content);
+                    Console.WriteLine("--------------------------------------------------");
+
+                    PrintComments(article.Id);
+
+                    Console.WriteLine("\n================ ПАНЕЛЬ УПРАВЛІННЯ ================");
+                    Console.WriteLine("[ Стрілка ВЛІВО ] - Попередня стаття");
+                    Console.WriteLine("[ Стрілка ВПРАВО] - Наступна стаття");
+                    Console.WriteLine("[ K ] - Написати коментар");
+                    Console.WriteLine("[ V ] - Відповісти на коментар");
+                    Console.WriteLine("[ D ] - Видалити цю статтю (тільки для автора)");
+                    Console.WriteLine("[ X ] - Видалити свій коментар");
+                    Console.WriteLine("[ ESC ] - Повернутися в головне меню");
+                    Console.WriteLine("===================================================");
+
+                    var keyInfo = Console.ReadKey(true);
+
+                    if (keyInfo.Key == ConsoleKey.LeftArrow)
+                        currentIndex = (currentIndex > 0) ? currentIndex - 1 : filteredArticles.Count - 1;
+                    else if (keyInfo.Key == ConsoleKey.RightArrow)
+                        currentIndex = (currentIndex < filteredArticles.Count - 1) ? currentIndex + 1 : 0;
+                    else if (keyInfo.Key == ConsoleKey.K)
+                        AddCommentInteractive(article.Id, null);
+                    else if (keyInfo.Key == ConsoleKey.V)
+                    {
+                        Console.Write("\nВведіть ID коментаря, на який відповідаєте: ");
+                        if (int.TryParse(Console.ReadLine(), out int parentId))
+                            AddCommentInteractive(article.Id, parentId);
+                    }
+                    else if (keyInfo.Key == ConsoleKey.D)
+                    {
+                        if (article.AuthorId == _currentUser.Id)
+                        {
+                            Console.Write("\nВи впевнені, що хочете назавжди видалити цю статтю? (Y/N): ");
+                            if (Console.ReadLine()?.ToUpper() == "Y")
+                            {
+                                _blogService.DeleteArticle(article.Id, _currentUser.Id);
+                                Console.WriteLine("[+] Статтю видалено! Натисніть клавішу...");
+                                Console.ReadKey(true);
+                                break; 
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("\n[-] Помилка: Ви можете видаляти лише свої статті.");
+                            Console.ReadKey(true);
+                        }
+                    }
+                    else if (keyInfo.Key == ConsoleKey.X)
+                    {
+                        Console.Write("\nВведіть ID коментаря, який хочете видалити: ");
+                        if (int.TryParse(Console.ReadLine(), out int commentId))
+                        {
+                            try
+                            {
+                                _blogService.DeleteComment(commentId, _currentUser.Id);
+                                Console.WriteLine("[+] Коментар видалено! Натисніть клавішу...");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"\n[-] Помилка: {ex.Message}");
+                            }
+                            Console.ReadKey(true);
+                            break; 
+                        }
+                    }
+                    else if (keyInfo.Key == ConsoleKey.Escape)
+                        return; 
+                }
             }
         }
 
