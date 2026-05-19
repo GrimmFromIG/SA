@@ -21,7 +21,7 @@ namespace SA3.DAL.Json.Repositories
 
         public T GetById(int id)
         {
-            var property = typeof(T).GetProperty("Id");
+            var property = typeof(T).GetProperty("Id");    //на 4 
             return _dataList.FirstOrDefault(x => (int)property.GetValue(x) == id);
         }
 
